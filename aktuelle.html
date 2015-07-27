@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+	<meta charset="utf-8">
+	<link rel="shortcut icon" type="image/ico" href="http://www.datatables.net/favicon.ico">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=2.0">
+
+	<title>Anfragen</title>
+	<link rel="stylesheet" type="text/css" href="media/css/jquery.dataTables.css">
+	<link rel="stylesheet" type="text/css" href="resources/syntax/shCore.css">
+	<link rel="stylesheet" type="text/css" href="resources/demo.css">
+	<style type="text/css" class="init">
+
+	</style>
+	<script type="text/javascript" language="javascript" src="media/js/jquery.js"></script>
+	<script type="text/javascript" language="javascript" src="media/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" language="javascript" src="resources/syntax/shCore.js"></script>
+	<script type="text/javascript" language="javascript" src="resources/demo.js"></script>
+	<script type="text/javascript" language="javascript" class="init">
+
+/* Formatting function for row details - modify as you need */
+function format ( d ) {
+    // `d` is the original data object for the row
+    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+        '<tr>'+
+            '<td>Titel</td>'+
+            '<td>'+d['titel']+'</td>'+
+        '</tr>'+
+        '<tr>'+
+            '<td>Region</td>'+
+            '<td>'+d['region']+'</td>'+
+        '</tr>'+
+        '<tr>'+
+            '<td>Schlagworte</td>'+
+            '<td>'+d['schlagworte']+'</td>'+
+        '</tr>'+
+        '<tr>'+
+            '<td>Systematik</td>'+
+            '<td>'+d['systematik']+'</td>'+
+        '</tr>'+
+    '</table>';
+}
+
+
+$(document).ready(function() {
+// Setup - add a text input to each footer cell
+    $('#example thead th').each( function () {
+        var title = $('#example thead th').eq( $(this).index() ).text();
+        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+    } );
+
+	var table = $('#example').DataTable( {
+	   "ajax": {
+            "url": "aktuelle.json",
+            "dataSrc": ""
+        },
+        "deferRender": true,
+        "pagingType": "full_numbers",
+
+        "columns": [
+            { "data": "dokid","className":      'details-control' },
+            { "data": "title","className":      'details-control' },
+            { "data": "creator" ,"className":      'details-control'},
+            { "data": "typ" ,"className":      'details-control'}
+
+
+        ],
+
+        "columnDefs": [
+            {
+                // The `data` parameter refers to the data for the cell (defined by the
+                // `data` option, which defaults to the column being worked with, in
+                // this case `data: 0`.
+                "render": function ( data, type, row ) {
+                    return "<a href=\"http://landtag.nrw.de" + row['link']+"\"> "+ data +'</a>';
+
+                },
+                "targets": 0
+            }
+        ],
+         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+	   // "paging":   false,
+	    "ordering": false,
+	     stateSave: true,
+		initComplete: function () {
+			this.api().columns().every( function () {
+				var column = this;
+
+
+
+			} );
+		}
+	} );
+
+
+
+	 // Add event listener for opening and closing details
+    $('#example tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row( tr );
+
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            row.child( format(row.data()) ).show();
+            tr.addClass('shown');
+        }
+    } );
+
+
+
+	// Apply the search
+    table.columns().every( function () {
+        var that = this;
+
+        $( 'input', this.header() ).on( 'keyup change', function () {
+            that
+                .search( this.value )
+                .draw();
+        } );
+    } );
+} );
+
+
+	</script>
+</head>
+
+<body class="dt-example">
+
+<section>
+			<table id="example" class="display compact" cellspacing="0" width="100%">
+				<thead>
+					<tr>
+						<th>Drucksache</th>
+						<th>Titel</th>
+						<th>Urheber</th>
+                        <th>Datum</th>
+
+
+					</tr>
+				</thead>
+
+				<tfoot>
+					<tr>
+						<th>Drucksache</th>
+						<th>Titel</th>
+						<th>Urheber</th>
+                        <th>Datum</th>
+
+					</tr>
+				</tfoot>
+
+				<tbody>
+				
+				</tbody>
+			</table>
+</section>
+
+
+</body>
+</html>
