@@ -54,16 +54,16 @@ $(document).ready(function() {
             "url": "aktuelle.json",
             "dataSrc": ""
         },
+        "autoWidth":true,
         "deferRender": true,
         "pagingType": "full_numbers",
-
+         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         "columns": [
             { "data": "dokid","className":      'details-control' },
             { "data": "title","className":      'details-control' },
             { "data": "creator" ,"className":      'details-control'},
-            { "data": "typ" ,"className":      'details-control'}
-
-
+            { "data": "typ" ,"className":      'details-control'},
+             { "data": "date" ,"className":      'details-control'}
         ],
 
         "columnDefs": [
@@ -123,6 +123,8 @@ $(document).ready(function() {
                 .draw();
         } );
     } );
+
+
 } );
 
 
@@ -138,9 +140,8 @@ $(document).ready(function() {
 						<th>Drucksache</th>
 						<th>Titel</th>
 						<th>Urheber</th>
+                        <th>Typ</th>
                         <th>Datum</th>
-
-
 					</tr>
 				</thead>
 
@@ -149,8 +150,8 @@ $(document).ready(function() {
 						<th>Drucksache</th>
 						<th>Titel</th>
 						<th>Urheber</th>
+                        <th>Typ</th>
                         <th>Datum</th>
-
 					</tr>
 				</tfoot>
 
